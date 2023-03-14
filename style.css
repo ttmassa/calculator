@@ -16,8 +16,8 @@ body {
     height: 600px;
     border: 1px solid black;
     display: grid;
-    grid-template-columns: auto auto auto auto;
-    grid-template-rows: auto auto auto auto auto auto auto auto;
+    grid-template-columns: repeat(auto-fit, 4);
+    grid-template-rows: repeat(auto-fit, 8);
 }
 
 .result {
@@ -43,8 +43,16 @@ body {
     grid-row-end: 5;
 }
 
-.numbers, .ac, .del, .operators {
+.number, .ac, .del, .operators {
     font-size: 25px;
+}
+
+.currentNumber {
+    color: rgb(224, 217, 217);
+    margin: 0;
+    padding: 0;
+    display: flex;
+    justify-content: center;
 }
 
 
