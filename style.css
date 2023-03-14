@@ -20,6 +20,12 @@ body {
     grid-template-rows: repeat(auto-fit, 8);
 }
 
+button  {
+    box-sizing: border-box;
+    border: 1px solid rgb(255, 255, 255);
+    background-color: rgb(237, 224, 249);
+}
+
 .result {
     background-color: rgb(43, 43, 104);
     color: white;
