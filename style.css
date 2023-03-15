@@ -9,58 +9,79 @@ body {
     display: flex;
     justify-content: center;
     align-items: center;
-}
-
-#container {
+  }
+  
+  #container {
     width: 400px;
     height: 600px;
     border: 1px solid black;
     display: grid;
     grid-template-columns: repeat(auto-fit, 4);
     grid-template-rows: repeat(auto-fit, 8);
-}
-
-button  {
+  }
+  
+  button {
     box-sizing: border-box;
     border: 1px solid rgb(255, 255, 255);
     background-color: rgb(237, 224, 249);
-}
-
-.result {
+  }
+  
+  .result {
     background-color: rgb(43, 43, 104);
     color: white;
     grid-column-start: 1;
     grid-column-end: 5;
     grid-row-start: 1;
     grid-row-end: 4;
-}
-
-.ac {
+    position: relative;
+  }
+  
+  .ac {
     grid-column-start: 1;
     grid-column-end: 3;
     grid-row-start: 4;
     grid-row-end: 5;
-}
-
-.del {
+  }
+  
+  .del {
     grid-column-start: 3;
     grid-column-end: 5;
     grid-row-start: 4;
     grid-row-end: 5;
-}
-
-.number, .ac, .del, .operators {
+  }
+  
+  .number,
+  .ac,
+  .del,
+  .operators {
     font-size: 25px;
-}
-
-.currentNumber {
-    color: rgb(224, 217, 217);
+  }
+  
+  .currentNumber {
+    box-sizing: content-box;
+    font-size: 45px;
+    color: rgb(245, 237, 237);
     margin: 0;
     padding: 0;
     display: flex;
     justify-content: center;
-}
+    align-items: center;
+    height: 45px;
+    line-height: 1; /* found this to avoit result div's height to increase along with the font-size */
+    position: absolute;
+    right: 9%;
+    bottom: 23%;
+    border: 1px solid red;
+  }
 
-
-
-
+  .memoryNumber {
+    border: 1px solid red;
+    position: absolute;
+    right: 9%;
+    top: 12%;
+    color: rgb(192, 183, 202);
+    font-size: 22px;
+    height: 22px;
+    line-height: 1;
+  }
+  
