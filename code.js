@@ -21,7 +21,7 @@ allNumbers.forEach(number => number.addEventListener('click', () => { // Quand u
     const numberValue = Number(number.innerText); // On récupère le contenue de son texte (sa valeur)
     currentValue = currentValue * 10 + numberValue; //On l'ajoute à currentValue (*10 pour supporter les nombres > 9)
     currentNumber.innerText = currentValue; // On donne cette valeur à currentNumber
-    result.appendChild(currentNumber);    
+    const value = this.value;  
 }));
 
 const allOperators  = Array.from(document.querySelectorAll('.operator'));
