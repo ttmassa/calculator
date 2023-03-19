@@ -52,9 +52,12 @@ body {
   
   .number,
   .ac,
-  .del,
-  .operators {
+  .del {
     font-size: 25px;
+  }
+
+  .operator, .equal {
+    font-size: 20px;
   }
   
   .currentNumber {
