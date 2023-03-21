@@ -3,6 +3,7 @@
 let isCalcul = 0; // 0 = pas de calcul à faire, 1 = calcul à effectuer.
 let isReset = 0;
 let operatorSign;
+let previousOperator;
 
 // SELECTORS
 const container = document.querySelector('#container');
@@ -26,7 +27,6 @@ memoryNumber.classList.add('memoryNumber');
 const allNumbers  = Array.from(document.querySelectorAll('.number')); // Array of all button that contains a number
 
 allNumbers.forEach(number => number.addEventListener('click', () => { // Quand un nombre est cliqué  
-    console.log(isReset)
     if (isReset === 1) {
         reset();
         isReset--;
@@ -52,12 +52,14 @@ allButtons.forEach(number => number.addEventListener('mouseleave', () => {
 const allOperators  = Array.from(document.querySelectorAll('.operator'));
 
 allOperators.forEach(operator => operator.addEventListener('click', () => {
-    
-    if (isCalcul === 0) { // isCalcul to 0 means there is no operation queued   
-        operatorSign = operator.getAttribute('data-operator'); // On récupère le signe de l'opération
+    if (isCalcul === 0) {  
+        operatorSign = operator.getAttribute('data-operator'); 
         updateDisplay(operatorSign);
+        previousOperator = operatorSign;
+        console.log(previousOperator);
     } else {
-        performCalculation(operatorSign); // doit servir à mettre à jour memoryNumber et à afficher le résultat actuelle dans current
+        operatorSign = operator.getAttribute('data-operator');
+        previousOperator = performCalculation(previousOperator, operatorSign); // Met à jour previousOperator pour le prochain calcul
     }
 }));
 
@@ -114,13 +116,18 @@ function displayFinalResult(operator) {
     result.appendChild(currentNumber); // On ajoute currentNumber à l'affichage
 }
 
-function performCalculation() { 
+function performCalculation(previousOperator, operator) {
+    console.log('CALLED!');
     let tValue = memoryNumber.innerText.split(' ');
     let beforeValue  = parseInt(tValue[0]); 
     memoryNumber.innerText = '';
     console.log(beforeValue);
+    console.log(operator);
     console.log(currentValue);
-    memoryNumber.innerText += doTheMath(beforeValue, currentValue, operatorSign) + ' ' + operatorSign;
+    let result = doTheMath(beforeValue, currentValue, previousOperator);
+    memoryNumber.innerText += result + ' ' + operator;
+    previousOperator = operator; // Met à jour previousOperator avec le nouvelle opérateur
     currentValue = 0;
     currentNumber.innerText = '';
+    return previousOperator; // On doit retourner previousOperator puisqu'on en aura besoin dans le forEach Operator
 }

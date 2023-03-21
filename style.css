@@ -88,7 +88,7 @@ button {
   line-height: 1;
 }
 
-.number-clicked {
+.container > .number-clicked {
   background-color: rgb(169, 122, 227);
 }
   
