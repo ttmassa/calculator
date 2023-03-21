@@ -10,6 +10,7 @@ const container = document.querySelector('#container');
 const result = document.querySelector('.result');
 const ac  = document.querySelector('.ac');
 const equals = document.querySelector('.equal');
+const del = document.querySelector('.del');
 
 // 
 let currentValue = 0; // Value to append to currentNumber
@@ -67,6 +68,16 @@ ac.addEventListener('click', () => {
     reset();
 });
 
+del.addEventListener('click', () => {
+    let previousNumber = parseInt(currentNumber.innerText.slice(currentNumber.innerText.length - 1, currentNumber.innerText.length));
+    let newCurrentNumber = currentNumber.innerText.slice(0, currentNumber.innerText.length - 1);
+    currentNumber.innerText = newCurrentNumber;
+    console.log(currentValue);
+    console.log(newCurrentNumber);
+    currentValue = (currentValue - previousNumber) / 10;
+    console.log(currentValue);
+});
+
 equals.addEventListener('click', () => {
     displayFinalResult(operatorSign);
 });
@@ -88,7 +99,7 @@ function doTheMath(a, b, operator) {
             return a - b;
         case "*":
             return a * b;
-        case "/":
+        case "÷":
             return a / b;
     }
 }
@@ -103,7 +114,6 @@ function updateDisplay(operator) { //Put the number to the top with its operator
 }
 
 function displayFinalResult(operator) {
-    console.log('YEP'); 
     let previousValue = parseInt(memoryNumber.innerText); // On convertit la valeur de memoryNumber en entier = b
     let finalResult = doTheMath(previousValue, currentValue, operatorSign); // On fait donc le bon calcul de notre ancienne valeur (stockée dans memoryNumber) et l'actuelle (currentValue)
     currentNumber.innerText = finalResult; // On modifie la valeur de currentNumber pour afficher le résultat
@@ -121,9 +131,6 @@ function performCalculation(previousOperator, operator) {
     let tValue = memoryNumber.innerText.split(' ');
     let beforeValue  = parseInt(tValue[0]); 
     memoryNumber.innerText = '';
-    console.log(beforeValue);
-    console.log(operator);
-    console.log(currentValue);
     let result = doTheMath(beforeValue, currentValue, previousOperator);
     memoryNumber.innerText += result + ' ' + operator;
     previousOperator = operator; // Met à jour previousOperator avec le nouvelle opérateur
