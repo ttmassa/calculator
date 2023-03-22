@@ -15,6 +15,7 @@ const coma = document.querySelector('.coma');
 
 // 2 p results
 let currentValue = 0; // Value to append to currentNumber
+let currentValue2 = 0;
 let currentNumber = document.createElement('p');
 currentNumber.innerText = 0; // Value of main number in result's div
 currentNumber.classList.add('currentNumber');
@@ -26,32 +27,48 @@ memoryNumber.classList.add('memoryNumber');
 
 // EVENT LISTENERS
 
-const allNumbers  = Array.from(document.querySelectorAll('.number')); // Array of all button that contains a number
+const allNumbers  = Array.from(document.querySelectorAll('.number')); // Array de tous les boutons qui ont pour classe .number
 
+["click", "keypress"].forEach((event) => {
+    allNumbers.forEach(number => number.addEventListener(event, (e) => {
+        if (isReset === 1) {
+            reset();
+            isReset--;
+        }
 
-allNumbers.forEach(number => number.addEventListener('keypress', (e) => {
-    if (e.keyCode === 97)
+        let numberValue;
+
+        if (currentNumber.innerText.includes(".")) {
+            numberValue = (Number(number.innerText)) / 10; // On récupère le contenue de son texte (sa valeur)
+            console.log(numberValue);
+            currentValue = currentValue + numberValue; //On l'ajoute à currentValue (*10 pour supporter les nombres > 9)
+        } else {
+            numberValue = Number(number.innerText);
+            currentValue = currentValue * 10 + numberValue; //On l'ajoute à currentValue (*10 pour supporter les nombres > 9)
+        }
+        
+        
+        currentNumber.innerText = currentValue; // On donne cette valeur à currentNumber
+        result.appendChild(currentNumber); 
+    }));
+});
+
+function addNumber(evt) {
+    console.log('CALLED');
     if (isReset === 1) {
         reset();
         isReset--;
     }
 
-    let numberValue;
+    let numberValue2 = Number(evt.key);
+    currentValue2 = 10 * currentValue2 + numberValue2; 
+    currentNumber.innerText = currentValue2;
 
-    if (currentNumber.innerText.includes(".")) {
-        numberValue = (Number(number.innerText)) / 10; // On récupère le contenue de son texte (sa valeur)
-        console.log(numberValue);
-        currentValue = currentValue + numberValue; //On l'ajoute à currentValue (*10 pour supporter les nombres > 9)
-    } else {
-        numberValue = Number(number.innerText);
-        currentValue = currentValue * 10 + numberValue; //On l'ajoute à currentValue (*10 pour supporter les nombres > 9)
-    }
-    
-    
-    currentNumber.innerText = currentValue; // On donne cette valeur à currentNumber
-    result.appendChild(currentNumber); 
-}));
+    result.appendChild(currentNumber);
+}
 
+document.addEventListener('keydown', addNumber, false);
+    
 
 const allOperators  = Array.from(document.querySelectorAll('.operator'));
 
@@ -66,6 +83,22 @@ allOperators.forEach(operator => operator.addEventListener('click', () => {
         previousOperator = performCalculation(previousOperator, operatorSign); // Met à jour previousOperator pour le prochain calcul
     }
 }));
+
+function addOperator(evt) {
+    if (evt.keyCode === 106 || evt.keyCode === 107 || evt.keyCode === 109 || evt.keyCode === 111) {
+        if (isCalcul === 0) {  
+            operatorSign = evt.key; 
+            updateDisplay(operatorSign);
+            previousOperator = operatorSign;
+            console.log(previousOperator);
+        } else {
+            operatorSign = evt.key;
+            previousOperator = performCalculation(previousOperator, operatorSign); // Met à jour previousOperator pour le prochain calcul
+        }
+    }   
+}
+
+document.addEventListener('keydown', addOperator, false); 
 
 ac.addEventListener('click', () => {
     reset();
@@ -111,7 +144,7 @@ function doTheMath(a, b, operator) {
     }
 }
 
-function updateDisplay(operator) { //Put the number to the top with its operator 
+function updateDisplay(operator) { //Affiche le nombre en haut avec l'opérateur tapé
     memoryNumber.innerText += '' + currentValue + ' ' + operator; // memory affiche le nombre plus l'opérateur
     currentNumber.innerText = 0; // On remet à 0 current
     currentValue = parseFloat(currentNumber.innerText).toFixed(2); // On convertit la valeur de currentNumber en entier = a
