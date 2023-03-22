@@ -26,7 +26,7 @@ memoryNumber.classList.add('memoryNumber');
 
 // EVENT LISTENERS
 
-const allNumbers  = Array.from(document.querySelectorAll('.number')); // Array of all button that contains a number
+const allNumbers  = Array.from(document.querySelectorAll('.number')); // Array de tous les boutons qui ont pour classe .number
 
 ["click", "keypress"].forEach((event) => {
     allNumbers.forEach(number => number.addEventListener(event, (e) => {
@@ -110,7 +110,7 @@ function doTheMath(a, b, operator) {
     }
 }
 
-function updateDisplay(operator) { //Put the number to the top with its operator 
+function updateDisplay(operator) { //Affiche le nombre en haut avec l'opérateur tapé
     memoryNumber.innerText += '' + currentValue + ' ' + operator; // memory affiche le nombre plus l'opérateur
     currentNumber.innerText = 0; // On remet à 0 current
     currentValue = parseFloat(currentNumber.innerText).toFixed(2); // On convertit la valeur de currentNumber en entier = a
