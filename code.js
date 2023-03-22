@@ -11,8 +11,9 @@ const result = document.querySelector('.result');
 const ac  = document.querySelector('.ac');
 const equals = document.querySelector('.equal');
 const del = document.querySelector('.del');
+const coma = document.querySelector('.coma');
 
-// 
+// 2 p results
 let currentValue = 0; // Value to append to currentNumber
 let currentNumber = document.createElement('p');
 currentNumber.innerText = 0; // Value of main number in result's div
@@ -27,28 +28,29 @@ memoryNumber.classList.add('memoryNumber');
 
 const allNumbers  = Array.from(document.querySelectorAll('.number')); // Array of all button that contains a number
 
-allNumbers.forEach(number => number.addEventListener('click', () => { // Quand un nombre est cliqué  
-    if (isReset === 1) {
-        reset();
-        isReset--;
-    }
-    const numberValue = Number(number.innerText); // On récupère le contenue de son texte (sa valeur)
-    currentValue = currentValue * 10 + numberValue; //On l'ajoute à currentValue (*10 pour supporter les nombres > 9)
-    currentNumber.innerText = currentValue; // On donne cette valeur à currentNumber
-    result.appendChild(currentNumber);    
-}));
+["click", "keypress"].forEach((event) => {
+    allNumbers.forEach(number => number.addEventListener(event, (e) => {
+        if (isReset === 1) {
+            reset();
+            isReset--;
+        }
 
-const allButtons = Array.from(document.querySelectorAll('button'));
+        let numberValue;
 
-allButtons.forEach(number => number.addEventListener('mouseenter', () => {
-    number.classList.remove('button');
-    number.classList.add('number-clicked');
-}));
-
-allButtons.forEach(number => number.addEventListener('mouseleave', () => {
-    number.classList.remove('number-clicked');
-    number.classList.add('button');
-}));
+        if (currentNumber.innerText.includes(".")) {
+            numberValue = (Number(number.innerText)) / 10; // On récupère le contenue de son texte (sa valeur)
+            console.log(numberValue);
+            currentValue = currentValue + numberValue; //On l'ajoute à currentValue (*10 pour supporter les nombres > 9)
+        } else {
+            numberValue = Number(number.innerText);
+            currentValue = currentValue * 10 + numberValue; //On l'ajoute à currentValue (*10 pour supporter les nombres > 9)
+        }
+        
+        
+        currentNumber.innerText = currentValue; // On donne cette valeur à currentNumber
+        result.appendChild(currentNumber); 
+    }));
+});
 
 const allOperators  = Array.from(document.querySelectorAll('.operator'));
 
@@ -82,6 +84,10 @@ equals.addEventListener('click', () => {
     displayFinalResult(operatorSign);
 });
 
+coma.addEventListener('click', () => {
+    addDecimalPoint();
+});
+
 // FUNCTIONS 
 
 function reset() {
@@ -107,15 +113,15 @@ function doTheMath(a, b, operator) {
 function updateDisplay(operator) { //Put the number to the top with its operator 
     memoryNumber.innerText += '' + currentValue + ' ' + operator; // memory affiche le nombre plus l'opérateur
     currentNumber.innerText = 0; // On remet à 0 current
-    currentValue = parseInt(currentNumber.innerText); // On convertit la valeur de currentNumber en entier = a
+    currentValue = parseFloat(currentNumber.innerText).toFixed(2); // On convertit la valeur de currentNumber en entier = a
     isCalcul++; // Prochain opérateur cliqué = résultat à afficher donc calcul à faire
     result.appendChild(memoryNumber);
     result.appendChild(currentNumber); 
 }
 
 function displayFinalResult(operator) {
-    let previousValue = parseInt(memoryNumber.innerText); // On convertit la valeur de memoryNumber en entier = b
-    let finalResult = doTheMath(previousValue, currentValue, operatorSign); // On fait donc le bon calcul de notre ancienne valeur (stockée dans memoryNumber) et l'actuelle (currentValue)
+    let previousValue = parseFloat(memoryNumber.innerText); // On convertit la valeur de memoryNumber en entier = b
+    let finalResult = doTheMath(previousValue, currentValue, operatorSign).toFixed(2); // On fait donc le bon calcul de notre ancienne valeur (stockée dans memoryNumber) et l'actuelle (currentValue)
     currentNumber.innerText = finalResult; // On modifie la valeur de currentNumber pour afficher le résultat
     memoryNumber.innerText = previousValue + ' ' + operator + ' ' + currentValue + ' = ' + finalResult; // On met à jour la valeur de memoryNumber avec le résultat et l'opérateur de la nouvelle opération
     previousValue = currentValue; // On met à jour la valeur de previousValue avec la nouvelle valeur de currentValue
@@ -127,9 +133,8 @@ function displayFinalResult(operator) {
 }
 
 function performCalculation(previousOperator, operator) {
-    console.log('CALLED!');
     let tValue = memoryNumber.innerText.split(' ');
-    let beforeValue  = parseInt(tValue[0]); 
+    let beforeValue  = parseFloat(tValue[0]); 
     memoryNumber.innerText = '';
     let result = doTheMath(beforeValue, currentValue, previousOperator);
     memoryNumber.innerText += result + ' ' + operator;
@@ -137,4 +142,15 @@ function performCalculation(previousOperator, operator) {
     currentValue = 0;
     currentNumber.innerText = '';
     return previousOperator; // On doit retourner previousOperator puisqu'on en aura besoin dans le forEach Operator
+}
+
+function addDecimalPoint() {
+    
+    if (currentNumber.innerText.includes('.')) { // Empêche d'avoir 2 virgules dans le même nombre
+        return currentNumber.innerText;
+    } else {
+        currentNumber.innerText += '.';
+        console.log(currentValue);
+    }
+
 }
