@@ -28,29 +28,30 @@ memoryNumber.classList.add('memoryNumber');
 
 const allNumbers  = Array.from(document.querySelectorAll('.number')); // Array of all button that contains a number
 
-["click", "keypress"].forEach((event) => {
-    allNumbers.forEach(number => number.addEventListener(event, (e) => {
-        if (isReset === 1) {
-            reset();
-            isReset--;
-        }
 
-        let numberValue;
+allNumbers.forEach(number => number.addEventListener('keypress', (e) => {
+    if (e.keyCode === 97)
+    if (isReset === 1) {
+        reset();
+        isReset--;
+    }
 
-        if (currentNumber.innerText.includes(".")) {
-            numberValue = (Number(number.innerText)) / 10; // On récupère le contenue de son texte (sa valeur)
-            console.log(numberValue);
-            currentValue = currentValue + numberValue; //On l'ajoute à currentValue (*10 pour supporter les nombres > 9)
-        } else {
-            numberValue = Number(number.innerText);
-            currentValue = currentValue * 10 + numberValue; //On l'ajoute à currentValue (*10 pour supporter les nombres > 9)
-        }
-        
-        
-        currentNumber.innerText = currentValue; // On donne cette valeur à currentNumber
-        result.appendChild(currentNumber); 
-    }));
-});
+    let numberValue;
+
+    if (currentNumber.innerText.includes(".")) {
+        numberValue = (Number(number.innerText)) / 10; // On récupère le contenue de son texte (sa valeur)
+        console.log(numberValue);
+        currentValue = currentValue + numberValue; //On l'ajoute à currentValue (*10 pour supporter les nombres > 9)
+    } else {
+        numberValue = Number(number.innerText);
+        currentValue = currentValue * 10 + numberValue; //On l'ajoute à currentValue (*10 pour supporter les nombres > 9)
+    }
+    
+    
+    currentNumber.innerText = currentValue; // On donne cette valeur à currentNumber
+    result.appendChild(currentNumber); 
+}));
+
 
 const allOperators  = Array.from(document.querySelectorAll('.operator'));
 
