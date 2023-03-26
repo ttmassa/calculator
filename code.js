@@ -14,9 +14,9 @@ const del = document.querySelector('.del');
 const coma = document.querySelector('.coma');
 
 // 2 p results
-let currentValue = 0; // Value to append to currentNumber
+let currentValue = 0; // Valeur à append à currentNumber
 let currentNumber = document.createElement('p');
-currentNumber.innerText = 0; // Value of main number in result's div
+currentNumber.innerText = 0; // Valeur du résultat principal dans le div result
 currentNumber.classList.add('currentNumber');
 result.appendChild(currentNumber);
 
@@ -38,9 +38,14 @@ const allNumbers  = Array.from(document.querySelectorAll('.number')); // Array d
         let numberValue;
 
         if (currentNumber.innerText.includes(".")) {
-            numberValue = (Number(number.innerText)) / 10; // On récupère le contenue de son texte (sa valeur)
-            console.log(numberValue);
-            currentValue = currentValue + numberValue; //On l'ajoute à currentValue (*10 pour supporter les nombres > 9)
+            numberValue = (Number(number.innerText)); // On récupère le contenue de son texte (sa valeur)
+            let decimalLength = (currentNumber.innerText.slice(currentNumber.innerText.indexOf(".").length).length) - 1; // Nombre de caractères après le point
+
+            if (currentValue < 10) {
+                currentValue = currentValue + (numberValue * Math.pow(10, -decimalLength)); //On l'ajoute à currentValue (* Math.pow(10, -decimalLength) pour actualiser la valeur en fonction sa place après la virgule)
+            } else if (currentValue >= 10) {
+                currentValue = currentValue + 10 * (numberValue * Math.pow(10, -decimalLength));
+            }
         } else {
             numberValue = Number(number.innerText);
             currentValue = currentValue * 10 + numberValue; //On l'ajoute à currentValue (*10 pour supporter les nombres > 9)
@@ -59,7 +64,6 @@ allOperators.forEach(operator => operator.addEventListener('click', () => {
         operatorSign = operator.getAttribute('data-operator'); 
         updateDisplay(operatorSign);
         previousOperator = operatorSign;
-        console.log(previousOperator);
     } else {
         operatorSign = operator.getAttribute('data-operator');
         previousOperator = performCalculation(previousOperator, operatorSign); // Met à jour previousOperator pour le prochain calcul
@@ -74,10 +78,7 @@ del.addEventListener('click', () => {
     let previousNumber = parseInt(currentNumber.innerText.slice(currentNumber.innerText.length - 1, currentNumber.innerText.length));
     let newCurrentNumber = currentNumber.innerText.slice(0, currentNumber.innerText.length - 1);
     currentNumber.innerText = newCurrentNumber;
-    console.log(currentValue);
-    console.log(newCurrentNumber);
     currentValue = (currentValue - previousNumber) / 10;
-    console.log(currentValue);
 });
 
 equals.addEventListener('click', () => {
@@ -105,12 +106,12 @@ function doTheMath(a, b, operator) {
             return a - b;
         case "*":
             return a * b;
-        case "÷":
+        case "/":
             return a / b;
     }
 }
 
-function updateDisplay(operator) { //Affiche le nombre en haut avec l'opérateur tapé
+function updateDisplay(operator) { // Affiche le nombre en haut avec l'opérateur tapé
     memoryNumber.innerText += '' + currentValue + ' ' + operator; // memory affiche le nombre plus l'opérateur
     currentNumber.innerText = 0; // On remet à 0 current
     currentValue = parseFloat(currentNumber.innerText).toFixed(2); // On convertit la valeur de currentNumber en entier = a
@@ -119,17 +120,22 @@ function updateDisplay(operator) { //Affiche le nombre en haut avec l'opérateur
     result.appendChild(currentNumber); 
 }
 
-function displayFinalResult(operator) {
-    let previousValue = parseFloat(memoryNumber.innerText); // On convertit la valeur de memoryNumber en entier = b
-    let finalResult = doTheMath(previousValue, currentValue, operatorSign).toFixed(2); // On fait donc le bon calcul de notre ancienne valeur (stockée dans memoryNumber) et l'actuelle (currentValue)
-    currentNumber.innerText = finalResult; // On modifie la valeur de currentNumber pour afficher le résultat
-    memoryNumber.innerText = previousValue + ' ' + operator + ' ' + currentValue + ' = ' + finalResult; // On met à jour la valeur de memoryNumber avec le résultat et l'opérateur de la nouvelle opération
-    previousValue = currentValue; // On met à jour la valeur de previousValue avec la nouvelle valeur de currentValue
-    currentValue = 0; // On réinitialise la valeur de currentValue pour la nouvelle opération
+function displayFinalResult() {
+    let previousValue = parseFloat(memoryNumber.innerText);
+    let finalResult = doTheMath(previousValue, currentValue, operatorSign);
+    finalResult = parseFloat(finalResult.toFixed(2)); // On arrondit à 2 décimals près
+    if (finalResult % 1 === 0) { // Si le résultat est un entier 
+        finalResult = finalResult.toString(); // On le convertit en string
+    }
+    currentNumber.innerText = finalResult;
+    memoryNumber.innerText = previousValue + ' ' + operatorSign + ' ' + currentValue + ' = ' + finalResult;
+    previousValue = currentValue;
+    currentValue = 0;
     isReset++;
-    isCalcul++; // On met isCalcul à 1 pour indiquer qu'une nouvelle opération est en cours
-    result.appendChild(memoryNumber); // On ajoute memoryNumber à l'affichage
-    result.appendChild(currentNumber); // On ajoute currentNumber à l'affichage
+    isCalcul++;
+    result.appendChild(memoryNumber);
+    result.appendChild(currentNumber);
+
 }
 
 function performCalculation(previousOperator, operator) {
@@ -150,7 +156,6 @@ function addDecimalPoint() {
         return currentNumber.innerText;
     } else {
         currentNumber.innerText += '.';
-        console.log(currentValue);
     }
 
 }
