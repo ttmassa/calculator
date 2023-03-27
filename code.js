@@ -38,18 +38,21 @@ const allNumbers  = Array.from(document.querySelectorAll('.number')); // Array d
         let numberValue;
 
         if (currentNumber.innerText.includes(".")) {
-            numberValue = (Number(number.innerText)); // On récupère le contenue de son texte (sa valeur)
+            numberValue = number.getAttribute('data-number'); // On récupère la valeur de l'attribut data-number
+            console.log(numberValue);
             let decimalLength = (currentNumber.innerText.slice(currentNumber.innerText.indexOf(".").length).length) - 1; // Nombre de caractères après le point
-
+        
             if (currentValue < 10) {
                 currentValue = currentValue + (numberValue * Math.pow(10, -decimalLength)); //On l'ajoute à currentValue (* Math.pow(10, -decimalLength) pour actualiser la valeur en fonction sa place après la virgule)
             } else if (currentValue >= 10) {
                 currentValue = currentValue + 10 * (numberValue * Math.pow(10, -decimalLength));
             }
         } else {
-            numberValue = Number(number.innerText);
+            numberValue = parseFloat(number.getAttribute('data-number')); //On récupère la valeur de l'attribut data-number et on la convertit en nombre à virgule flottante
+            console.log(numberValue);
             currentValue = currentValue * 10 + numberValue; //On l'ajoute à currentValue (*10 pour supporter les nombres > 9)
         }
+        
         
         
         currentNumber.innerText = currentValue; // On donne cette valeur à currentNumber
