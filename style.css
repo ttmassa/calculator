@@ -89,6 +89,5 @@ button {
 
 div > button:hover {
   transition: 0.3s;
-  background-color: rgb(194, 141, 223);
 }
   

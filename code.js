@@ -57,6 +57,19 @@ const allNumbers  = Array.from(document.querySelectorAll('.number')); // Array d
     }));
 });
 
+const allButtons = Array.from(document.querySelectorAll('button'));
+
+allButtons.forEach(button => button.addEventListener("mouseenter", () => {
+    let bgButtonColorR = Math.floor(Math.random() * 256);
+    let bgButtonColorG = Math.floor(Math.random() * 256);
+    let bgButtonColorB = Math.floor(Math.random() * 256);
+    button.style.backgroundColor = `rgb(${bgButtonColorR}, ${bgButtonColorG}, ${bgButtonColorB})`;
+}));
+
+allButtons.forEach(button => button.addEventListener("mouseleave", () => {
+    button.style.backgroundColor = `rgb(237, 224, 249)`;
+}));
+
 const allOperators  = Array.from(document.querySelectorAll('.operator'));
 
 allOperators.forEach(operator => operator.addEventListener('click', () => {
