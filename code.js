@@ -38,24 +38,40 @@ const allNumbers  = Array.from(document.querySelectorAll('.number')); // Array d
         let numberValue;
 
         if (currentNumber.innerText.includes(".")) {
-            numberValue = (Number(number.innerText)); // On récupère le contenue de son texte (sa valeur)
-            let decimalLength = (currentNumber.innerText.slice(currentNumber.innerText.indexOf(".").length).length) - 1; // Nombre de caractères après le point
+            if (number.innerText === "0" && !currentNumber.innerText.includes(".0")) {
+                const numberValue = Number(number.innerText);
+                const decimalIndex = currentNumber.innerText.indexOf(".");
+                const decimalLength = currentNumber.innerText.slice(decimalIndex + 1).length;
+                let currentValue = Number(currentNumber.innerText);
 
-            if (currentValue < 10) {
-                currentValue = currentValue + (numberValue * Math.pow(10, -decimalLength)); //On l'ajoute à currentValue (* Math.pow(10, -decimalLength) pour actualiser la valeur en fonction sa place après la virgule)
-            } else if (currentValue >= 10) {
-                currentValue = currentValue + 10 * (numberValue * Math.pow(10, -decimalLength));
+                if (currentValue < 0) {
+                    decimalLength--;
+                }
+
+                let decimalValue = numberValue * Math.pow(10, -decimalLength);
+                currentValue += decimalValue;
+
+                currentNumber.innerText = currentValue.toFixed(decimalLength);
+            } else {
+                numberValue = (Number(number.innerText));
+                let decimalLength = (currentNumber.innerText.slice(currentNumber.innerText.indexOf(".").length).length) - 1;
+
+                if (currentValue < 10) {
+                    currentValue = currentValue + (numberValue * Math.pow(10, -decimalLength));
+                } else if (currentValue >= 10) {
+                    currentValue = currentValue + 10 * (numberValue * Math.pow(10, -decimalLength));
+                }
             }
         } else {
             numberValue = Number(number.innerText);
-            currentValue = currentValue * 10 + numberValue; //On l'ajoute à currentValue (*10 pour supporter les nombres > 9)
+            currentValue = currentValue * 10 + numberValue;
         }
-        
-        
-        currentNumber.innerText = currentValue; // On donne cette valeur à currentNumber
+
+        currentNumber.innerText = currentValue;
         result.appendChild(currentNumber); 
     }));
 });
+
 
 const allOperators  = Array.from(document.querySelectorAll('.operator'));
 
@@ -75,10 +91,7 @@ ac.addEventListener('click', () => {
 });
 
 del.addEventListener('click', () => {
-    let previousNumber = parseInt(currentNumber.innerText.slice(currentNumber.innerText.length - 1, currentNumber.innerText.length));
-    let newCurrentNumber = currentNumber.innerText.slice(0, currentNumber.innerText.length - 1);
-    currentNumber.innerText = newCurrentNumber;
-    currentValue = (currentValue - previousNumber) / 10;
+    removeLastDigit();  
 });
 
 equals.addEventListener('click', () => {
@@ -159,3 +172,32 @@ function addDecimalPoint() {
     }
 
 }
+
+function removeLastDigit() {
+
+    if (currentNumber.innerText.includes(".")) {
+        // Si le nombre contient un point, on traite la partie décimale et la partie entière séparément
+        let decimalIndex = currentNumber.innerText.indexOf(".");
+        let integerPart = currentNumber.innerText.slice(0, decimalIndex);
+        let decimalPart = currentNumber.innerText.slice(decimalIndex + 1);
+
+        if (decimalPart.length > 1) {
+        // S'il y a plus d'un chiffre après le point, on supprime simplement le dernier chiffre
+        decimalPart = decimalPart.slice(0, -1);
+        } else {
+        // S'il n'y a qu'un seul chiffre après le point, on supprime également le point
+        decimalPart = "";
+        }
+  
+        let newCurrentNumber = integerPart + (decimalPart ? "." + decimalPart : "");
+        currentNumber.innerText = newCurrentNumber;
+        currentValue = Number(newCurrentNumber);
+    } else {
+        // Si le nombre ne contient pas de point, on supprime simplement le dernier chiffre
+        let previousNumber = parseInt(currentNumber.innerText.slice(-1));
+        let newCurrentNumber = currentNumber.innerText.slice(0, -1);
+        currentNumber.innerText = newCurrentNumber;
+        currentValue = (currentValue - previousNumber) / 10;
+    }
+}
+  
