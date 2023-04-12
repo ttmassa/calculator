@@ -1,11 +1,15 @@
 // DEFAULT VARIABLES
 
+
 let isCalcul = 0; // 0 = pas de calcul à faire, 1 = calcul à effectuer.
 let isReset = 0;
 let operatorSign;
 let previousOperator;
 
+
 // SELECTORS
+
+
 const container = document.querySelector('#container');
 const result = document.querySelector('.result');
 const ac  = document.querySelector('.ac');
@@ -26,6 +30,7 @@ memoryNumber.classList.add('memoryNumber');
 
 // EVENT LISTENERS
 
+
 const allNumbers  = Array.from(document.querySelectorAll('.number')); // Array de tous les boutons qui ont pour classe .number
 
 ["click", "keypress"].forEach((event) => {
@@ -39,19 +44,22 @@ const allNumbers  = Array.from(document.querySelectorAll('.number')); // Array d
 
         if (currentNumber.innerText.includes(".")) {
             if (number.innerText === "0" && !currentNumber.innerText.includes(".0")) {
-                const numberValue = Number(number.innerText);
-                const decimalIndex = currentNumber.innerText.indexOf(".");
-                const decimalLength = currentNumber.innerText.slice(decimalIndex + 1).length;
-                let currentValue = Number(currentNumber.innerText);
+                console.log("CALLED");
+                const numberValue = 0; // Récupère un 0
+                const decimalIndex = currentNumber.innerText.indexOf("."); // La place de la virgule dans le string
+                const decimalLength = currentNumber.innerText.slice(decimalIndex + 1).length; // La longueur de la partie décimale
+                let currentValue = Number(currentNumber.innerText).toFixed(1);
+                console.log(currentValue);
 
                 if (currentValue < 0) {
                     decimalLength--;
                 }
 
+                console.log("NumberValue = " + numberValue);
                 let decimalValue = numberValue * Math.pow(10, -decimalLength);
+                console.log("decimale value = " + decimalValue);
                 currentValue += decimalValue;
 
-                currentNumber.innerText = currentValue.toFixed(decimalLength);
             } else {
                 numberValue = (Number(number.innerText));
                 let decimalLength = (currentNumber.innerText.slice(currentNumber.innerText.indexOf(".").length).length) - 1;
@@ -102,7 +110,9 @@ coma.addEventListener('click', () => {
     addDecimalPoint();
 });
 
+
 // FUNCTIONS 
+
 
 function reset() {
     currentNumber.innerText = 0;
